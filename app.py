@@ -16,7 +16,7 @@ from PIL import Image
 from streamlit_drawable_canvas import st_canvas
 from svgpathtools import parse_path
 
-
+#TODO add iterative inpainting
 
 import argparse
 import io
@@ -445,6 +445,7 @@ def image_inpainting():
         up_image = Image.open(BytesIO(bytes_data)).convert("RGBA")
         width, height = up_image.size
         stroke_width = st.sidebar.slider("Stroke width: ", 1, 100, 20)
+        show_mask = st.sidebar.checkbox('Show mask')
 
         canvas_result = st_canvas(
             stroke_color="rgba(255, 0, 255, 0.8)",
@@ -456,7 +457,7 @@ def image_inpainting():
             key="compute_arc_length",
         )
         if canvas_result.image_data is not None:
-            st.write("Image mask:")
+            
             im = canvas_result.image_data
             background = np.where(
                 (im[:, :, 0] == 0) & 
@@ -470,10 +471,13 @@ def image_inpainting():
             )
             im[background]=[0,0,0,255]
             im[drawing]=[0,0,0,0] #RGBA
-            st.image(im)
-            st.write("Image with inpainting:")
-            inpainted_img = process(np.array(up_image), np.array(im)) #TODO Put button here
-            st.image(inpainted_img)
+            if show_mask:
+                st.write("Image mask:")
+                st.image(im)
+            if st.button('Run'):
+                st.write("Image with inpainting:")
+                inpainted_img = process(np.array(up_image), np.array(im)) #TODO Put button here
+                st.image(inpainted_img)
         #if (
         #    canvas_result.json_data is not None
         #    and len(canvas_result.json_data["objects"]) != 0
