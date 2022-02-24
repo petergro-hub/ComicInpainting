@@ -1,5 +1,6 @@
-# Streamlit - Drawable Canvas - Demo
+# Comic editing app
 
-Streamlit Drawable Canvas demo on Streamlit Sharing
+This is a small comic inpainting and retargeting app I made based on recent papers (References to be added) using streamlit.
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/andfanilo/streamlit-drawable-canvas-demo/master/app.py)
+To use it simply run ```streamlit run app.py```
+
