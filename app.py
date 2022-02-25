@@ -95,6 +95,7 @@ def resize(image, width):
     dim = None
     h, w = image.shape[:2]
     dim = (width, int(h * width / float(w)))
+    image = image.astype('float32')
     return cv2.resize(image, dim)
 
 def rotate_image(image, clockwise):
