@@ -16,7 +16,6 @@ import pandas as pd
 import streamlit as st
 from PIL import Image
 from streamlit_drawable_canvas import st_canvas
-from svgpathtools import parse_path
 
 #TODO add iterative inpainting
 
