@@ -515,6 +515,7 @@ def main():
     page = st.sidebar.selectbox("Page:", options=list(PAGES.keys()))
     PAGES[page]()
 
+
     with st.sidebar:
         st.markdown("---")
         st.markdown(
@@ -525,7 +526,12 @@ def main():
 
 
 
+
 def image_inpainting():
+    if 'reuse_image' not in st.session_state:
+        st.session_state.reuse_image = None
+    def set_image(img):
+        st.session_state.reuse_image = img
     st.title("Image Inpainting Tool")
     st.markdown(
         """
@@ -536,11 +542,11 @@ def image_inpainting():
     uploaded_file = st.file_uploader("Choose a file")
     if uploaded_file is not None:
 
-        #st.write(bytes_data)
-        #string_data = stringio.read()
-        #st.write(string_data)
-        bytes_data = uploaded_file.getvalue()
-        up_image = Image.open(BytesIO(bytes_data)).convert("RGBA")
+        if st.session_state.reuse_image is not None:
+            up_image = Image.fromarray(st.session_state.reuse_image)
+        else:
+            bytes_data = uploaded_file.getvalue()
+            up_image = Image.open(BytesIO(bytes_data)).convert("RGBA")
         width, height = up_image.size
         stroke_width = st.sidebar.slider("Stroke width: ", 1, 100, 20)
         show_mask = st.sidebar.checkbox('Show mask')
@@ -572,10 +578,13 @@ def image_inpainting():
             if show_mask:
                 st.write("Image mask:")
                 st.image(im)
+            reuse = False
             if st.button('Run'):
                 st.write("Image with inpainting:")
                 inpainted_img = process(np.array(up_image), np.array(im)) #TODO Put button here
                 st.image(inpainted_img)
+                reuse = st.button('Re-use image', on_click=set_image,args=(inpainted_img, ))
+
 
 
 def image_res():
